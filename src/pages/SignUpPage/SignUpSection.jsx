@@ -16,7 +16,21 @@ const SignUpSection = () => {
     const [isNextClicked, setIsNextClicked] = useState(false)
 
     const onSubmit = (data) => {
-        console.log(data)
+        if (!isNextClicked) {
+            const { parkingname, areaname, fulladdress, parkingImage, bikeslots, carslots, ...newData } = data
+            data = newData
+            console.log(data)
+        }
+
+        ; (async () => {
+            try {
+                const res = await axios.post('api/user/create', { isParkingOwner, ...data })
+                console.log("res: " + res.data)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        })()
     }
 
     return (

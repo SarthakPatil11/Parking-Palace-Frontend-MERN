@@ -20,6 +20,17 @@ const OTPModal = ({ fogetPassModalID, loginData }) => {
 
     const onSubmitOTP = (data) => {
         console.log({ otp, ...data })
+            ; (async () => {
+                try {
+                    const res = await axios.post('api/user/verify-otp', { username: loginData.username, otp })
+                    console.log("res: ")
+                    console.log(res.data)
+                    window.location.reload();
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            })()
     }
 
     return (

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 import axios from "axios"
 
 export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookCheckModalID, bikeSlots, carSlots }) => {
+    const user = JSON.parse(localStorage.getItem('user'));
     const {
         register,
         handleSubmit,
@@ -18,6 +19,19 @@ export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookC
 
     const onSubmitBooking = (data) => {
         console.log(data)
+        // ; (async () => {
+        //     try {
+        //         const res = await axios.post('api/user/login', data)
+        //         console.log("res: ")
+        //         console.log(res.data)
+        //         localStorage.setItem("access_token", res.data.token)
+        //         localStorage.setItem("user", JSON.stringify(res.data.user))
+        //         window.location.reload();
+        //     }
+        //     catch (error) {
+        //         console.log(error)
+        //     }
+        // })()
     }
 
     return (

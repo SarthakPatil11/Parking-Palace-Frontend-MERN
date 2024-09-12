@@ -3,8 +3,11 @@ import { FaUserAlt } from "react-icons/fa";
 import { FaKey } from "react-icons/fa";
 import CTAButton from "./CTAButton"
 import Toast from "./Toast";
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form"
+import axios from "axios"
 import { useState } from "react";
+const OTP_EXPIRATION_TIME = 1 * 30 * 1000; // 5 minutes
 
 const LoginModal = ({ loginModalID, fogetPassModalID, setLoginData }) => {
     const {
@@ -15,19 +18,54 @@ const LoginModal = ({ loginModalID, fogetPassModalID, setLoginData }) => {
     } = useForm()
     const [loginFormData, setLoginFormData] = useState(null)
     const [toast, setToast] = useState(null)
+    const navigate = useNavigate();
 
     const handleCloseToast = () => {
         setToast(null);
     };
 
     const onForgetPasswordClicked = () => {
-        document.getElementById(fogetPassModalID).showModal()
+        if (loginFormData) {
+            setToast(null)
+                ; (async () => {
+                    try {
+                        const res = await axios.post('api/user/send-otp', { username: loginFormData.username })
+                        console.log("res: ")
+                        console.log(res.data)
+                    }
+                    catch (error) {
+                        console.log(error)
+                    }
+                })()
+            document.getElementById(fogetPassModalID).showModal()
+        }
+        else {
+            setToast({
+                message: "Try once login!",
+                duration: 5000,
+                severity: "error"
+            })
+        }
     }
 
     const onSubmitLogin = (data) => {
         console.log(data)
         setLoginFormData(data)
         setLoginData(data)
+            ; (async () => {
+                try {
+                    const res = await axios.post('api/user/login', data)
+                    console.log("res: ")
+                    console.log(res.data)
+                    localStorage.setItem("access_token", res.data.token)
+                    localStorage.setItem("user", JSON.stringify(res.data.user))
+                    navigate('/');
+                    window.location.reload();
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            })()
     }
 
     return (

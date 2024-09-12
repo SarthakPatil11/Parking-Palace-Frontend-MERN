@@ -7,6 +7,11 @@ const CTAButton = ({ isOutlined, className, to, onClick, children, isDisabled })
     if (to) {
         return (
             <>
+                {/* {isOutlined ? (
+                    <input type="submit" className={`${defaultClassesOutlined} ${className}`} value={Icon ? <Icon/> : children} onClick={onClick} />
+                ) : (
+                        <input type="submit" className={`${defaultClasses} ${className}`} value={`${<Icon />} ${children}`} onClick={onClick} />
+                )} */}
                 {isOutlined ? (
                     <Link className={`${defaultClassesOutlined} ${className}`} to={to} onClick={onClick}>{children}</Link>
                 ) : (

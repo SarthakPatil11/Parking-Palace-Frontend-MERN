@@ -9,6 +9,9 @@ import LoginModal from "./LoginModal";
 import OTPModal from "./OTPModal";
 
 const Card = ({ index, parkingName, parkingAddress, parkingCoordinets, bikeSlots, carSlots }) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const access_token = localStorage.getItem('access_token');
+
     const [isBookNowClicked, setBookNowClicked] = useState(false);
     const [isBickClicked, setBickClicked] = useState(false);
     const [loginData, setLoginData] = useState({})
@@ -52,7 +55,12 @@ const Card = ({ index, parkingName, parkingAddress, parkingCoordinets, bikeSlots
                         ) : (
                             <>
                                 <CTAButton isOutlined={true} href={parkingCoordinets} className="text-2xl" ><FaLocationDot className="text-lg" /></CTAButton>
-                                <CTAButton isOutlined={false} onClick={() => setBookNowClicked(true)} isDisabled={(!bikeSlots && !carSlots)} >Book Now</CTAButton>
+                                {access_token ? (
+                                    <CTAButton isOutlined={false} onClick={() => setBookNowClicked(true)} isDisabled={(!bikeSlots && !carSlots)} >Book Now</CTAButton>
+                                ) : (
+                                    <CTAButton onClick={() => document.getElementById(loginModalID).showModal()}>Login</CTAButton>
+                                )}
+
                             </>
                         )}
                     </div>
