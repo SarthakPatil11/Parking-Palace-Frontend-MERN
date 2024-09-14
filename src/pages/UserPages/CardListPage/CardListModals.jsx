@@ -7,9 +7,9 @@ import Modal from "../../../components/Modal";
 import OTPInput from "../../../components/OTPInput";
 import { useForm } from "react-hook-form"
 import axios from "axios"
+import { useState } from "react";
 
-export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookCheckModalID, bikeSlots, carSlots }) => {
-    const user = JSON.parse(localStorage.getItem('user'));
+export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookCheckModalID, bikeSlots, carSlots, setBookingFormData }) => {
     const {
         register,
         handleSubmit,
@@ -17,21 +17,27 @@ export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookC
         formState: { errors },
     } = useForm()
 
+    const onBookNowClicked = () => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        ; (async () => {
+            try {
+                const res = await axios.post('api/user/send-otp', { username: user.username })
+                console.log("res: ")
+                console.log(res.data)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        })()
+        document.getElementById(bookCheckModalID).showModal()
+    }
+
     const onSubmitBooking = (data) => {
         console.log(data)
-        // ; (async () => {
-        //     try {
-        //         const res = await axios.post('api/user/login', data)
-        //         console.log("res: ")
-        //         console.log(res.data)
-        //         localStorage.setItem("access_token", res.data.token)
-        //         localStorage.setItem("user", JSON.stringify(res.data.user))
-        //         window.location.reload();
-        //     }
-        //     catch (error) {
-        //         console.log(error)
-        //     }
-        // })()
+        const user = JSON.parse(localStorage.getItem('user'));
+        const parkingOwnerID = bookNowModalID.replace("bookNowModal_", "")
+        setBookingFormData({ isBickClicked, parkingOwnerID, ...data, user })
+        onBookNowClicked()
     }
 
     return (
@@ -47,20 +53,15 @@ export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookC
                         <label className="input input-bordered flex items-center gap-2 pe-0">
                             <IoMdTime className="text-2xl" />
                             <input type="time" className="grow" placeholder="Start time" {...register("startTime")} />
-                            <select className="select select-bordered max-w-xs" {...register("duration")}>
-                                <option disabled selected>Duration</option>
-                                <option>30 Minutes</option>
-                                <option>1 Hour</option>
-                                <option>2 Hour</option>
-                                <option>3 Hour</option>
-                                <option>4 Hour</option>
-                                <option>5 Hour</option>
-                            </select>
+                        </label>
+                        <label className="input input-bordered flex items-center gap-2 pe-0">
+                            <IoMdTime className="text-2xl" />
+                            <input type="time" className="grow" placeholder="End time" {...register("endTime")} />
                         </label>
                     </div>
                     <div className="flex justify-between items-center mt-5 mx-2">
                         <p><i>Available Slot(s): </i>{isBickClicked ? bikeSlots : carSlots}</p>
-                        <CTAButton onClick={() => document.getElementById(bookCheckModalID).showModal()}>Book Now</CTAButton>
+                        <CTAButton>Book Now</CTAButton>
                     </div>
                 </form>
             </div>
@@ -71,16 +72,44 @@ export const BookNowModal = ({ bookNowModalID, isBickClicked, parkingName, bookC
     )
 }
 
-export const BookCheckModal = ({ bookCheckModalID }) => {
+export const BookCheckModal = ({ bookCheckModalID, bookingFormData }) => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors },
+    } = useForm()
 
+    const [otp, setOTP] = useState()
     const handleOTPChange = (otp) => {
-        console.log("Current OTP:", otp);
+        setOTP(otp)
     };
+
+    const onSubmitOTP = (data) => {
+        console.log({ otp, ...data })
+        const user = JSON.parse(localStorage.getItem('user'))
+            ; (async () => {
+                try {
+                    const res = await axios.post('api/user/verify-otp', { username: user.username, otp })
+                    console.log("res: ")
+                    console.log(res.data)
+                    if (res.status === 200){
+                        const res = await axios.post('api/booking/create', { ...bookingFormData })
+                        console.log("booking res: ")
+                        console.log(res.data)
+                    }
+                    // window.location.reload();
+                }
+                catch (error) {
+                    console.log(error)
+                }
+            })()
+    }
 
     return (
         <Modal id={bookCheckModalID}>
             <div className="modal-box">
-                <form method="dialog">
+                <form method="dialog" onSubmit={handleSubmit(onSubmitOTP)}>
                     <div className="mb-6">
                         <h3 className="font-bold text-3xl mb-2">Check OTP</h3>
                         <p>OTP is e-mailed to your registred e-mail.</p>

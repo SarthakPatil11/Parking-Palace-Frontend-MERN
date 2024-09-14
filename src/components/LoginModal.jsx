@@ -99,4 +99,5 @@ const LoginModal = ({ loginModalID, fogetPassModalID, setLoginData }) => {
     )
 }
 
+
 export default LoginModal

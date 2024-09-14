@@ -5,7 +5,7 @@ import Modal from "./Modal";
 import { useForm } from "react-hook-form"
 
 
-const ManupulationSection = ({ filterOptions, handleSearch }) => {
+const ManupulationSection = ({ filterOptions, handleSearch, setFilterData }) => {
     const {
         register,
         handleSubmit,
@@ -34,9 +34,11 @@ const ManupulationSection = ({ filterOptions, handleSearch }) => {
             <Modal id={filterModalID} >
                 <div className="modal-box max-w-fit">
                     <div className="space-x-2">
-                        {filterOptions.map((e, i) => (
-                            <CTAButton key={i}>{e}</CTAButton>
-                        ))}
+                        <form method="dialog" className="modal-backdrop flex">
+                            {filterOptions.map((e, i) => (
+                                <CTAButton key={i} onClick={() => { setFilterData(e === "All"? '' : e) }} >{e}</CTAButton>
+                            ))}
+                        </form>
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">

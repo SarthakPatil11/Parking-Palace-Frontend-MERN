@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import Card from "../../../components/Card"
 import axios from "axios"
 
-const CardListSection = ({ search }) => {
+const CardListSection = ({ search, filterData }) => {
     const cardlist = [
         {
             Name: "Lav to park",
@@ -62,18 +62,11 @@ const CardListSection = ({ search }) => {
     return (
         <>
             <div className="p-6 flex flex-wrap gap-8 justify-center">
-                {/* {
-                    cardlist && cardlist.length > 0 ? (
-                        cardlist.map((e, i) => (
-                            <Card key={i} parkingName={e.Name} parkingAddress={e.Address} />
-                        ))
-                    ) : (<div>no data</div>)
-                } */}
                 {
                     isLoading ? (<div>Loading...</div>) : (
                         cardListDB && cardListDB.length > 0 ? (
                             cardListDB.map((e, i) => (
-                                <Card key={i} index={i} parkingName={e.name} parkingAddress={e.address} bikeSlots={e.bikeSlots} carSlots={e.carSlots} />
+                                <Card key={i} index={e._id} parkingName={e.name} parkingAddress={e.address} bikeSlots={e.bikeSlots} carSlots={e.carSlots} />
                             ))
                         ) : (<div>no data</div>)
                     )

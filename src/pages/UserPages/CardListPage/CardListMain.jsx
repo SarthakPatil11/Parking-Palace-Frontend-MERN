@@ -1,13 +1,11 @@
 import CardListSection from "./CardListSection"
 import ManupulationSection from "../../../components/ManupulationSection"
-import { useLocation } from 'react-router-dom';
 import { useState } from "react";
 
 const CardListMain = () => {
-
-    const filterOptions = []
-    const location = useLocation();
-    const [data, setData] = useState(location.state);
+    const filterOptions = ["All"]
+    const [data, setData] = useState({ search: '' });
+    const [filterData, setFilterData] = useState('');
 
     const handleSearch = (formData) => {
         console.log(formData)
@@ -16,8 +14,8 @@ const CardListMain = () => {
 
     return (
         <>
-            <ManupulationSection filterOptions={filterOptions} handleSearch={handleSearch} />
-            <CardListSection search={data.search} />
+            <ManupulationSection filterOptions={filterOptions} handleSearch={handleSearch} setFilterData={setFilterData} />
+            <CardListSection search={data.search} filterData={filterData} />
         </>
     )
 }

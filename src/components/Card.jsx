@@ -7,6 +7,7 @@ import { useState } from "react";
 import { BookCheckModal, BookNowModal } from "../pages/UserPages/CardListPage/CardListModals";
 import LoginModal from "./LoginModal";
 import OTPModal from "./OTPModal";
+import axios from "axios"
 
 const Card = ({ index, parkingName, parkingAddress, parkingCoordinets, bikeSlots, carSlots }) => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -15,6 +16,7 @@ const Card = ({ index, parkingName, parkingAddress, parkingCoordinets, bikeSlots
     const [isBookNowClicked, setBookNowClicked] = useState(false);
     const [isBickClicked, setBickClicked] = useState(false);
     const [loginData, setLoginData] = useState({})
+    const [bookingFormData, setBookingFormData] = useState(null)
     let bookNowModalID = `bookNowModal_${index}`
     let bookCheckModalID = `bookCheckModalID_${index}`
     let loginModalID = 'loginModal'
@@ -66,8 +68,8 @@ const Card = ({ index, parkingName, parkingAddress, parkingCoordinets, bikeSlots
                     </div>
                 </div>
             </div>
-            <BookNowModal bookNowModalID={bookNowModalID} isBickClicked={isBickClicked} parkingName={parkingName} bookCheckModalID={bookCheckModalID} bikeSlots={bikeSlots} carSlots={carSlots} />
-            <BookCheckModal bookCheckModalID={bookCheckModalID} />
+            <BookNowModal bookNowModalID={bookNowModalID} isBickClicked={isBickClicked} parkingName={parkingName} bookCheckModalID={bookCheckModalID} bikeSlots={bikeSlots} carSlots={carSlots} setBookingFormData={setBookingFormData} />
+            <BookCheckModal bookCheckModalID={bookCheckModalID} bookingFormData={bookingFormData} />
             <LoginModal loginModalID={loginModalID} fogetPassModalID={fogetPassModalID} setLoginData={setLoginData} />
             <OTPModal fogetPassModalID={fogetPassModalID} loginData={loginData} />
             {/* <Toast>{toastMsg}</Toast> */}

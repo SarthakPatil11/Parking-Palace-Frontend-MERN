@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import LoginModal from "./LoginModal";
 import OTPModal from "./OTPModal";
 import { useState } from "react";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 const NavBar = () => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -16,6 +17,7 @@ const NavBar = () => {
 
     let loginModalID = 'loginModal'
     let fogetPassModalID = 'forgetPassModal'
+    let changePasswordModalID = 'changePasswordModal'
 
     const [loginData, setLoginData] = useState({})
 
@@ -42,13 +44,20 @@ const NavBar = () => {
                             tabIndex={0}
                             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                             <li><Link>Home</Link></li>
-                            <li>
-                                <Link>Booking</Link>
-                                <ul className="p-2">
-                                    <li><Link>Submenu 1</Link></li>
-                                    <li><Link>Submenu 2</Link></li>
-                                </ul>
-                            </li>
+                            {user?.role === "ParkingOwner" ? (
+                                <>
+                                    <li><Link to={"/Dashboard"}>Dashboard</Link></li>
+                                    {/* <li>
+                                    <details>
+                                        <summary>Booking</summary>
+                                        <ul className="p-2">
+                                            <li><Link>Submenu_1</Link></li>
+                                            <li><Link>Submenu_2</Link></li>
+                                        </ul>
+                                    </details>
+                                </li> */}
+                                </>
+                            ) : ""}
                             <li><Link>About Us</Link></li>
                         </ul>
                     </div>
@@ -58,15 +67,18 @@ const NavBar = () => {
                     <ul className="menu menu-horizontal px-1">
                         <li><Link>Home</Link></li>
                         {user?.role === "ParkingOwner" ? (
-                            <li>
-                                <details>
-                                    <summary>Booking</summary>
-                                    <ul className="p-2">
-                                        <li><Link>Submenu_1</Link></li>
-                                        <li><Link>Submenu_2</Link></li>
-                                    </ul>
-                                </details>
-                            </li>
+                            <>
+                                <li><Link to={"/Dashboard"}>Dashboard</Link></li>
+                                {/* <li>
+                                    <details>
+                                        <summary>Booking</summary>
+                                        <ul className="p-2">
+                                            <li><Link>Submenu_1</Link></li>
+                                            <li><Link>Submenu_2</Link></li>
+                                        </ul>
+                                    </details>
+                                </li> */}
+                            </>
                         ) : ""}
                         <li><Link>About Us</Link></li>
                     </ul>
@@ -86,7 +98,8 @@ const NavBar = () => {
                 </div>
             </div>
             <LoginModal loginModalID={loginModalID} fogetPassModalID={fogetPassModalID} setLoginData={setLoginData} />
-            <OTPModal fogetPassModalID={fogetPassModalID} loginData={loginData} />
+            <OTPModal fogetPassModalID={fogetPassModalID} changePasswordModalID={changePasswordModalID} loginData={loginData} />
+            <ChangePasswordModal changePasswordModalID={changePasswordModalID} loginData={loginData} />
         </>
     )
 }

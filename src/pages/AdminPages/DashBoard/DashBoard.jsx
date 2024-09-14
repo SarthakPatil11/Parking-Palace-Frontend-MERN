@@ -1,14 +1,21 @@
 import ManupulationSection from "../../../components/ManupulationSection"
 import TableSection from "./TableSection"
-
+import { useState } from "react";
 
 const DashBoard = () => {
-    const filterOptions = ["Verified", "Not-Verified", "Time-Extended"]
+    const filterOptions = ["All", "Verified", "Not-Verified", "Time-Extended"]
+    const [data, setData] = useState({ search: '' });
+    const [filterData, setFilterData] = useState('');
+
+    const handleSearch = (formData) => {
+        console.log(formData)
+        setData({ search: formData.search })
+    }
 
     return (
         <>
-            <ManupulationSection filterOptions={filterOptions} />
-            <TableSection/>
+            <ManupulationSection filterOptions={filterOptions} handleSearch={handleSearch} setFilterData={setFilterData} />
+            <TableSection search={data.search} filterData={filterData}  />
         </>
     )
 }

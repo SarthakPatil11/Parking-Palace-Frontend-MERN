@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { useState } from "react";
 import axios from "axios"
 
-const OTPModal = ({ fogetPassModalID, loginData }) => {
+const OTPModal = ({ fogetPassModalID, changePasswordModalID, loginData, doAfterVerify }) => {
     const {
         register,
         handleSubmit,
@@ -25,7 +25,15 @@ const OTPModal = ({ fogetPassModalID, loginData }) => {
                     const res = await axios.post('api/user/verify-otp', { username: loginData.username, otp })
                     console.log("res: ")
                     console.log(res.data)
-                    window.location.reload();
+                    if (doAfterVerify){
+                        doAfterVerify()
+                    }
+                    if (changePasswordModalID){
+                        document.getElementById(changePasswordModalID).showModal()
+                    }
+                    else{
+                        window.location.reload();
+                    }
                 }
                 catch (error) {
                     console.log(error)
